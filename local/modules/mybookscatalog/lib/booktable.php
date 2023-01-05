@@ -31,6 +31,11 @@ class BookTable extends Entity\DataManager
                         new Entity\Validator\Unique(),
                         new Entity\Validator\RegExp('/\d{13}/'),
                         function ($value, $primary, $row, $field) {
+                            // value - значение поля
+                            // primary - массив с первичным ключом, в данном случае [ID => 1]
+                            // row - весь массив данных, переданный в ::add или ::update
+                            // field - объект валидируемого поля - Entity\StringField('ISBN', ...)
+
                             // проверяем последнюю цифру
                             if ($value[12] > 1) {
                                 return true;
@@ -59,6 +64,7 @@ class BookTable extends Entity\DataManager
         );
     }
 
+    // до добавления записи вырезаем все дефисы
     public static function onBeforeAdd(Entity\Event $event)
     {
         $result = new Entity\EventResult;
@@ -72,4 +78,64 @@ class BookTable extends Entity\DataManager
 
         return $result;
     }
+
+    // запрещает обновлять ISBN выбросом пустого поля
+    // public static function onBeforeUpdate(Entity\Event $event)
+    // {
+    //     $result = new Entity\EventResult;
+    //     $data = $event->getParameter("fields");
+
+    //     if (isset($data['ISBN']))
+    //     {
+    //         $result->unsetFields(array('ISBN'));
+    //     }
+
+    //     return $result;
+    // }
+
+    // еще можно сгенерировать ошибку
+    // public static function onBeforeUpdate(Entity\Event $event)
+    // {
+    //     $result = new Entity\EventResult;
+    //     $data = $event->getParameter("fields");
+
+    //     if (isset($data['ISBN']))
+    //     {
+    //         $result->addError(new Entity\FieldError(
+    //             $event->getEntity()->getField('ISBN'),
+    //             'Запрещено менять ISBN код у существующих книг'
+    //         ));
+    //     }
+
+    //     return $result;
+    // }
+
+    // еще можно обработать ошибку целиком для всей записи а не для поля
+    // public static function onBeforeUpdate(Entity\Event $event)
+    // {
+    //     $result = new Entity\EventResult;
+    //     $data = $event->getParameter("fields");
+
+    //     if (isset($data['ISBN'])) // комплексная проверка данных
+    //     {
+    //         $result->addError(new Entity\EntityError(
+    //             'Невозможно обновить запись'
+    //         ));
+    //     }
+
+    //     return $result;
+    // }
+
+    //все возможные события
+    // OnBeforeAdd (параметры: fields)
+    // OnAdd (параметры: fields)
+    // OnAfterAdd (параметры: fields, primary)
+
+    // OnBeforeUpdate (параметры: primary, fields)
+    // OnUpdate (параметры: primary, fields)
+    // OnAfterUpdate (параметры: primary, fields)
+
+    // OnBeforeDelete (параметры: primary)
+    // OnDelete (параметры: primary)
+    // OnAfterDelete (параметры: primary)
 }
