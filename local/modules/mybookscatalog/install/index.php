@@ -39,6 +39,16 @@ Class mybookscatalog extends CModule
 
     function UnInstallDB($arParams = Array())
     {
+        global $DB;
+        
+        $arSql[] = "DROP TABLE my_book";
+
+        foreach($arSql as $strSql)
+        {
+            if(!$DB->Query($strSql, true))
+                $arSQLErrors[] = "<hr><pre>Query:\n".$strSql."\n\nError:\n<span style=\"color: red;\">".$DB->db_Error."</span></pre>";
+        }
+
         UnRegisterModule("mybookscatalog");
         return true;
     }
