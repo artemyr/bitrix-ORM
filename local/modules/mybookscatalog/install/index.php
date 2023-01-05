@@ -1,6 +1,9 @@
 <?
 use Bitrix\Main\Localization\Loc;
 
+use Bitrix\Main\Application;
+use Bitrix\Main\Entity\Base;
+
 Loc::loadMessages(__FILE__);
 
 if(class_exists("mybookscatalog")) return;
@@ -34,13 +37,20 @@ Class mybookscatalog extends CModule
     function InstallDB($install_wizard = true)
     {
         RegisterModule("mybookscatalog");
+        
+        if(\Bitrix\Main\Loader::includeModule('mybookscatalog')){
+            if (!Application::getConnection()->isTableExists(Base::getInstance('Bitrix\MyBooksCatalog\BookTable')->getDBTableName())) {
+                Base::getInstance('Bitrix\MyBooksCatalog\BookTable')->createDBTable();
+            }
+        }        
+
         return true;
     }
 
     function UnInstallDB($arParams = Array())
     {
         global $DB;
-        
+
         $arSql[] = "DROP TABLE my_book";
 
         foreach($arSql as $strSql)
