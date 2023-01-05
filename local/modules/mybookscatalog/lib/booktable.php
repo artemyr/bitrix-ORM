@@ -75,6 +75,12 @@ class BookTable extends Entity\DataManager
                     return new Type\Date($lastFriday, 'Y-m-d');
                 }
             )),
+
+            // виртуальное поле
+            new Entity\ExpressionField('AGE_DAYS',
+                'DATEDIFF(NOW(), %s)', array('PUBLISH_DATE')
+            ),
+
             new Entity\TextField('EDITIONS_ISBN', array(
                 'serialized' => true
             )),

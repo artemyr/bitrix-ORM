@@ -10,6 +10,7 @@ if (!Loader::includeModule('mybookscatalog')) return;
 // include("delete.php");
 // include("read.php");
 
-include("getByPrimary.php");
+// include("getByPrimary.php");
+include("virtualField.php");
 
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");
