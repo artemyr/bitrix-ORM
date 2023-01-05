@@ -49,7 +49,25 @@ class BookTable extends Entity\DataManager
                     );
                 }
             )),
-            new Entity\StringField('TITLE'),
+
+            //модификация данных перед сохранением и перед выдачей
+            new Entity\StringField('TITLE', array(
+                'save_data_modification' => function () {
+                    return array(
+                        function ($value) {
+                            return "Книга ". $value;
+                        }
+                    );
+                },
+                'fetch_data_modification' => function () {
+                    return array(
+                        function ($value) {
+                            return str_replace("Книга ", "кн", $value);
+                        }
+                    );
+                }
+            )),
+
             new Entity\DateField('PUBLISH_DATE', array(
                 'default_value' => function () {
                     // figure out last friday date
