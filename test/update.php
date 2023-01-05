@@ -5,6 +5,24 @@ use Bitrix\Main\Entity;
 
 $id = 3;
 
+
+// вычисляемые свойства
+$readersCount = 3;
+BookTable::update($id, array(
+    'READERS_COUNT' => new Bitrix\Main\DB\SqlExpression('?# + ?i', 'READERS_COUNT', $readersCount)
+));
+// ? или ?s - значение экранируется и заключается в кавычки '
+// ?# - значение экранируется как идентификатор
+// ?i - значение приводится к integer
+// ?f - значение приводится к float
+
+
+
+
+
+die;
+
+
 $result = BookTable::update($id, array(
     'PUBLISH_DATE' => new Type\Date('2004-11-15', 'Y-m-d'),
     'ISBN' => '9780321127429'
